@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -68,6 +71,8 @@ public class MainActivity extends ActionBarActivity {
             fakeData.add("Friday - Sunny - 20ºC");
             fakeData.add("Saturday - Sunny - 20ºC");
             fakeData.add("Sunday - Sunny - 20ºC");
+            
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.listview_forecast,fakeData);
 
             return rootView;
         }

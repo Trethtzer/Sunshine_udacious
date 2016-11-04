@@ -71,9 +71,10 @@ public class MainActivity extends ActionBarActivity {
             fakeData.add("Friday - Sunny - 20ºC");
             fakeData.add("Saturday - Sunny - 20ºC");
             fakeData.add("Sunday - Sunny - 20ºC");
-            
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.listview_forecast,fakeData);
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,fakeData);
+            ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
+            listViewForecast.setAdapter(adapter);
             return rootView;
         }
     }

@@ -33,12 +33,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
     private String nameClass = "PlaceholderFragment";
+    private static ArrayList<String> fakeData;
+    private static ArrayAdapter<String> adapter;
 
     public ForecastFragment() {
         this.setHasOptionsMenu(true);
@@ -49,7 +53,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ArrayList<String> fakeData = new ArrayList<>();
+        fakeData = new ArrayList<>();
         fakeData.add("Today - Sunny - 20ºC");
         fakeData.add("Tomorrow - Sunny - 20ºC");
         fakeData.add("Wednesday - Sunny - 20ºC");
@@ -58,7 +62,7 @@ public class ForecastFragment extends Fragment {
         fakeData.add("Saturday - Sunny - 20ºC");
         fakeData.add("Sunday - Sunny - 20ºC");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,fakeData);
+        adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,fakeData);
         ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listViewForecast.setAdapter(adapter);
 
@@ -275,6 +279,14 @@ public class ForecastFragment extends Fragment {
             }
 
             return null;
+        }
+
+        protected void onPostExecute(String[] result) {
+            adapter.clear();
+            for(String s : result){
+                adapter.add(s);
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 }

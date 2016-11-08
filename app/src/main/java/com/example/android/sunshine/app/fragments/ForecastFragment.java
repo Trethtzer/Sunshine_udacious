@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,6 +33,7 @@ public class ForecastFragment extends Fragment {
     private String nameClass = "PlaceholderFragment";
 
     public ForecastFragment() {
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -52,10 +55,15 @@ public class ForecastFragment extends Fragment {
         listViewForecast.setAdapter(adapter);
 
 
-        new ForecastTask().execute("http://api.openweathermap.org/data/2.5/forecast/daily?q=29140,ES&mode=json&units=metric&cnt=7&APPID=");
+        // new ForecastTask().execute("http://api.openweathermap.org/data/2.5/forecast/daily?q=29140,ES&mode=json&units=metric&cnt=7&APPID=");
 
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.forecastfragment,menu);
     }
 
     public static class ForecastTask extends AsyncTask<String,Void,String>{

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -54,16 +55,24 @@ public class ForecastFragment extends Fragment {
         ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listViewForecast.setAdapter(adapter);
 
-
-        // new ForecastTask().execute("http://api.openweathermap.org/data/2.5/forecast/daily?q=29140,ES&mode=json&units=metric&cnt=7&APPID=");
-
-
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.forecastfragment,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_refresh:
+                new ForecastTask().execute("http://api.openweathermap.org/data/2.5/forecast/daily?q=29140,ES&mode=json&units=metric&cnt=7&APPID=");
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     public static class ForecastTask extends AsyncTask<String,Void,String>{

@@ -46,7 +46,7 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
-    private String nameClass = "PlaceholderFragment";
+    private String nameClass = "ForecastFragment";
     private static ArrayList<String> fakeData;
     private static ArrayAdapter<String> adapter;
 
@@ -60,14 +60,6 @@ public class ForecastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         fakeData = new ArrayList<>();
-        fakeData.add("Today - Sunny - 20ºC");
-        fakeData.add("Tomorrow - Sunny - 20ºC");
-        fakeData.add("Wednesday - Sunny - 20ºC");
-        fakeData.add("Thursday - Sunny - 20ºC");
-        fakeData.add("Friday - Sunny - 20ºC");
-        fakeData.add("Saturday - Sunny - 20ºC");
-        fakeData.add("Sunday - Sunny - 20ºC");
-
         adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,fakeData);
         ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listViewForecast.setAdapter(adapter);
@@ -92,18 +84,27 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.action_refresh:
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String location = sp.getString("location","29140");
-                new ForecastTask().execute(location);
+                updateWeather();
                 break;
             default:
                 break;
         }
         return true;
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
 
+    // Funcion para cargar los datos de nuevo.
+    public void updateWeather(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = sp.getString(getString(R.string.etp_key_location),getString(R.string.etp_defaultValue_location));
+        new ForecastTask().execute(location);
+    }
     // HEBRA PARA SACAR DATOS DE INTERNET.
-    public static class ForecastTask extends AsyncTask<String,Void,String[]>{
+    public class ForecastTask extends AsyncTask<String,Void,String[]>{
         private String nameClass = "ForecastTask";
 
 
@@ -123,6 +124,15 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String temp = sp.getString(getString(R.string.lp_key_temperature),getString(R.string.lp_default_temperature));
+
+            if(!temp.equals(getString(R.string.lp_default_temperature))){
+                high = high*1.8 + 32;
+                low = low*1.8 + 32;
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 

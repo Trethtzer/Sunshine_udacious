@@ -30,6 +30,7 @@ public class SettingsActivity extends PreferenceActivity
         // updated when the preference changes.
         // TODO: Add preferences
         bindPreferenceSummaryToValue(findPreference(getString(R.string.etp_key_location)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.lp_key_temperature)));
     }
 
     /**

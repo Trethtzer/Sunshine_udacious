@@ -8,5 +8,11 @@
         android:inputType="text"
         android:singleLine="true"
         />
+    <ListPreference
+        android:title="@string/lp_title_temperature"
+        android:key="@string/lp_key_temperature"
+        android:entries="@array/name"
+        android:entryValues="@array/values"
+        android:defaultValue="@string/lp_default_temperature" />
 
 </PreferenceScreen>

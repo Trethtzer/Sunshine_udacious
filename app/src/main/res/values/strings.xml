@@ -10,4 +10,7 @@
     <string name = "etp_title_location">Location</string>
     <string name = "etp_key_location">location</string>
     <string name = "etp_defaultValue_location">29140</string>
+    <string name = "lp_title_temperature">Temperature units</string>
+    <string name = "lp_key_temperature">temperature</string>
+    <string name = "lp_default_temperature">celsius</string>
 </resources>

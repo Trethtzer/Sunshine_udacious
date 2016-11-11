@@ -4,6 +4,7 @@ package com.example.android.sunshine.app.fragments;
  * Created by Trethtzer on 05/11/2016.
  */
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.sunshine.app.DetailActivity;
 import com.example.android.sunshine.app.R;
 
 import org.json.JSONArray;
@@ -71,7 +73,7 @@ public class ForecastFragment extends Fragment {
         listViewForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(),"THIS IS A TOAST",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getActivity(), DetailActivity.class));
             }
         });
 

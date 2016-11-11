@@ -13,4 +13,5 @@
     <string name = "lp_title_temperature">Temperature units</string>
     <string name = "lp_key_temperature">temperature</string>
     <string name = "lp_default_temperature">celsius</string>
+    <string name = "action_map">Show map</string>
 </resources>

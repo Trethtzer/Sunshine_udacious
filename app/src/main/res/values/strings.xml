@@ -7,5 +7,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="actionBar_Settings">Settings</string>
     <string name="actionBar_Detail">Details</string>
-
+    <string name = "etp_title_location">Location</string>
+    <string name = "etp_key_location">location</string>
+    <string name = "etp_defaultValue_location">29140</string>
 </resources>

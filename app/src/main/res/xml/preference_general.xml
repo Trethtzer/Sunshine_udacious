@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    
+    <EditTextPreference
+        android:title="@string/etp_title_location"
+        android:key="@string/etp_key_location"
+        android:defaultValue="@string/etp_defaultValue_location"
+        android:inputType="text"
+        android:singleLine="true"
+        />
 
 </PreferenceScreen>

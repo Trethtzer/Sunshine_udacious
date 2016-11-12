@@ -27,7 +27,7 @@ public class DetailFragment extends Fragment {
     private String mForecastStr;
 
     public DetailFragment() {
-        this.setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +35,8 @@ public class DetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         TextView tv = (TextView) rootView.findViewById(R.id.textViewDescriptionDetail);
-        tv.setText(getActivity().getIntent().getStringExtra("Forecast"));
+        mForecastStr = getActivity().getIntent().getStringExtra("Forecast");
+        tv.setText(mForecastStr);
 
         return rootView;
     }
@@ -69,6 +70,6 @@ public class DetailFragment extends Fragment {
             default:
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }

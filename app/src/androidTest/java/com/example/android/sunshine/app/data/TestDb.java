@@ -15,6 +15,7 @@
  */
 package com.example.android.sunshine.app.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -113,20 +114,43 @@ public class TestDb extends AndroidTestCase {
     public void testLocationTable() {
         // First step: Get reference to writable database
 
+        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
+        SQLiteDatabase wdb = dbHelper.getWritableDatabase();
+
         // Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
 
+        ContentValues cv = TestUtilities.createNorthPoleLocationValues();
+
         // Insert ContentValues into database and get a row ID back
+
+        long id = wdb.insert(WeatherContract.LocationEntry.TABLE_NAME,null,cv);
 
         // Query the database and receive a Cursor back
 
+        Cursor c = wdb.query(WeatherContract.LocationEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
         // Move the cursor to a valid database row
+
+        assertTrue("yep",c.moveToFirst());
 
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
 
+        TestUtilities.validateCurrentRecord("YEP",c,cv);
+        assertFalse("Yep",c.moveToNext());
+
         // Finally, close the cursor and database
+
+        c.close();
+        wdb.close();
 
     }
 

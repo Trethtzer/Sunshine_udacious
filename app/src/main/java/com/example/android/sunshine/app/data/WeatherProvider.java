@@ -253,8 +253,28 @@ public class WeatherProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Student: Start by getting a writable database
 
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int _id;
+
         // Student: Use the uriMatcher to match the WEATHER and LOCATION URI's we are going to
         // handle.  If it doesn't match these, throw an UnsupportedOperationException.
+
+        final int match = sUriMatcher.match(uri);
+        if(null == selection) selection = "1";
+
+        switch(match){
+            case WEATHER: {
+                _id = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            case LOCATION: {
+                _id = db.delete(WeatherContract.LocationEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
 
         // Student: A null value deletes all rows.  In my implementation of this, I only notified
         // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection
@@ -262,7 +282,7 @@ public class WeatherProvider extends ContentProvider {
         // Oh, and you should notify the listeners here.
 
         // Student: return the actual rows deleted
-        return 0;
+        return _id;
     }
 
     private void normalizeDate(ContentValues values) {
@@ -274,11 +294,39 @@ public class WeatherProvider extends ContentProvider {
     }
 
     @Override
-    public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // Student: This is a lot like the delete function.  We return the number of rows impacted
-        // by the update.
-        return 0;
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // Student: Start by getting a writable database
+
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int _id;
+
+        // Student: Use the uriMatcher to match the WEATHER and LOCATION URI's we are going to
+        // handle.  If it doesn't match these, throw an UnsupportedOperationException.
+
+        final int match = sUriMatcher.match(uri);
+        if(null == selection) selection = "1";
+
+        switch(match){
+            case WEATHER: {
+                _id = db.update(WeatherContract.WeatherEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            }
+            case LOCATION: {
+                _id = db.update(WeatherContract.LocationEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Student: A null value deletes all rows.  In my implementation of this, I only notified
+        // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection
+        // is null.
+        // Oh, and you should notify the listeners here.
+
+        // Student: return the actual rows deleted
+        return _id;
     }
 
     @Override

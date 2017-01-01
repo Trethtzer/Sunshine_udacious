@@ -81,6 +81,10 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void openPreferredLocationInMap(){
+        String location = Utility.getPreferredLocation(this);
+    }
+
     //Funcion que devuelve el nombre de la activity
     public String getNameClass(){
         return nameClass;

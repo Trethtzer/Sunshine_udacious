@@ -21,7 +21,7 @@ public class Utility {
                 .equals(context.getString(R.string.lp_default_temperature)); //  a lo mejor estas dos ultimas estan mal.
     }
 
-    static String formatTemperature(double temperature, boolean isMetric) {
+    public static String formatTemperature(double temperature, boolean isMetric) {
         double temp;
         if ( !isMetric ) {
             temp = 9*temperature/5+32;
@@ -31,7 +31,7 @@ public class Utility {
         return String.format("%.0f", temp);
     }
 
-    static String formatDate(long dateInMillis) {
+    public static String formatDate(long dateInMillis) {
         Date date = new Date(dateInMillis);
         return DateFormat.getDateInstance().format(date);
     }

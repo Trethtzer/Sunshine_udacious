@@ -14,6 +14,8 @@ import com.example.android.sunshine.app.fragments.ForecastFragment;
 
 public class MainActivity extends ActionBarActivity {
     String nameClass = "MainActivity";
+    String mLocation;
+    static final String FORECASTFRAGMENT_TAG = "1005";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,25 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(),FORECASTFRAGMENT_TAG)
                     .commit();
+        }
+        mLocation = PreferenceManager.getDefaultSharedPreferences(this).getString(
+                getString(R.string.etp_key_location),
+                getString(R.string.etp_defaultValue_location));
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!mLocation.equals(PreferenceManager.getDefaultSharedPreferences(this).getString(
+                getString(R.string.etp_key_location),
+                getString(R.string.etp_defaultValue_location)))){
+            // Si el valor de location se ha actualizado se ejecuta este if.
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ff.onLocationChanged();
+            mLocation = PreferenceManager.getDefaultSharedPreferences(this).getString(
+                    getString(R.string.etp_key_location),
+                    getString(R.string.etp_defaultValue_location));
         }
     }
 

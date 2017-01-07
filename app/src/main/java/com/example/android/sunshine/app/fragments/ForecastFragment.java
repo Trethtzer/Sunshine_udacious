@@ -122,12 +122,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
         return true;
     }
-    @Override
-    public void onStart(){
-        super.onStart();
-        updateWeather();
-    }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -139,6 +133,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = sp.getString(getString(R.string.etp_key_location),getString(R.string.etp_defaultValue_location));
         new FetchWeatherTask(getActivity()).execute(location);
+    }
+
+    public void onLocationChanged(){
+        updateWeather();
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override

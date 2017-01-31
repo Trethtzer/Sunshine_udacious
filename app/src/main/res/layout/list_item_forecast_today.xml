@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/touch_selector"
+    android:background="@drawable/touch_selector_today"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -11,23 +11,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1"
+        android:paddingLeft="60dp"
         android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_date_textview"
-            android:text="yep"/>
+            android:text="yep"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="#FFFFFF"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_high_textview"
-            android:text="yep"/>
+            android:text="yep"
+            android:textSize="72sp"
+            android:textColor="#FFFFFF"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_low_textview"
-            android:text="yep"/>
+            android:text="yep"
+            android:textSize="36sp"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -39,14 +47,17 @@
         android:gravity="center">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/list_item_icon" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_forecast_textview"
-            android:text="yep"/>
+            android:text="yep"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 

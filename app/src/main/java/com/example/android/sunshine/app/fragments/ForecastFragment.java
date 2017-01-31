@@ -4,6 +4,7 @@ package com.example.android.sunshine.app.fragments;
  * Created by Trethtzer on 05/11/2016.
  */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -23,13 +24,11 @@ import android.widget.ListView;
 import com.example.android.sunshine.app.DetailActivity;
 import com.example.android.sunshine.app.FetchWeatherTask;
 import com.example.android.sunshine.app.ForecastAdapter;
+import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
 import com.example.android.sunshine.app.data.WeatherContract;
 
-import java.util.ArrayList;
-
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
@@ -39,17 +38,21 @@ import android.support.v4.content.CursorLoader;
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private String nameClass = "ForecastFragment";
-    private static ArrayList<String> fakeData;
     private static ForecastAdapter adapter;
     private int LOADER_ID = 1005;
+    private Bundle sIS;
+    private int lastPosition;
+    ListView listView;
+    private boolean mTwoPane;
+
+    // Comunicacion del fragmento con mainActivity
+    mainActivityCallback mCallback;
+
+    public interface mainActivityCallback{
+        public void onItemSelected(Uri dateUri);
+    }
 
     private static final String[] FORECAST_COLUMNS = {
-        // In this case the id needs to be fully qualified with a table name, since
-        // the content provider joins the location & weather tables in the background
-        // (both have an _id column)
-        // On the one hand, that's annoying.  On the other, you can search the weather table
-        // using the location set by the user, which is only in the Location table.
-        // So the convenience is worth it.
         WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
         WeatherContract.WeatherEntry.COLUMN_DATE,
         WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
@@ -84,15 +87,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         adapter = new ForecastAdapter(getActivity(),null,0);
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        adapter.useTodayLayout(mTwoPane);
+        listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(adapter);
+        if(null != savedInstanceState){
+            lastPosition = savedInstanceState.getInt("position");
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int position, long l) {
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
                 // if it cannot seek to that position.
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                /*Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
                     Intent intent = new Intent(getActivity(), DetailActivity.class)
@@ -100,7 +107,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                                     locationSetting, cursor.getLong(COL_WEATHER_DATE)
                             ));
                     startActivity(intent);
+                }*/
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if(cursor != null){
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    mCallback.onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,cursor.getLong(COL_WEATHER_DATE)));
                 }
+                lastPosition = position;
             }
         });
 
@@ -128,6 +141,23 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
     }
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+
+        try {
+            mCallback = (mainActivityCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outB){
+        outB.putInt("position",lastPosition);
+        super.onSaveInstanceState(outB);
+    }
+
     // Funcion para cargar los datos de nuevo.
     public void updateWeather(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -138,6 +168,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLocationChanged(){
         updateWeather();
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    public void setUseTodayLayout(boolean mTwoPane){
+        this.mTwoPane = mTwoPane;
+        if(adapter != null) adapter.useTodayLayout(mTwoPane);
     }
 
     @Override
@@ -156,12 +191,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         return null;
     }
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
+        if(lastPosition != ListView.INVALID_POSITION) listView.smoothScrollToPosition(lastPosition);
     }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);

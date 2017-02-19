@@ -5,6 +5,7 @@ package com.example.android.sunshine.app.fragments;
  */
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -28,6 +29,7 @@ import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
 import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.service.SunshineService;
 
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -162,7 +164,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void updateWeather(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = sp.getString(getString(R.string.etp_key_location),getString(R.string.etp_defaultValue_location));
-        new FetchWeatherTask(getActivity()).execute(location);
+        // new FetchWeatherTask(getActivity()).execute(location);
+        Intent intent = new Intent(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
+        getActivity().startService(intent);
     }
 
     public void onLocationChanged(){

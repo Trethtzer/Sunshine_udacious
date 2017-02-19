@@ -38,6 +38,7 @@
                 android:value="com.example.android.sunshine.app.MainActivity"/>
         </activity>
         <service android:name=".service.SunshineService"></service>
+        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

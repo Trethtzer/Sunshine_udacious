@@ -5,12 +5,15 @@ package com.example.android.sunshine.app.fragments;
  */
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,6 +37,8 @@ import com.example.android.sunshine.app.service.SunshineService;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
+
+import static com.example.android.sunshine.app.Utility.getPreferredLocation;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -112,7 +117,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 }*/
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if(cursor != null){
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    String locationSetting = getPreferredLocation(getActivity());
                     mCallback.onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,cursor.getLong(COL_WEATHER_DATE)));
                 }
                 lastPosition = position;
@@ -162,12 +167,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     // Funcion para cargar los datos de nuevo.
     public void updateWeather(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = sp.getString(getString(R.string.etp_key_location),getString(R.string.etp_defaultValue_location));
-        // new FetchWeatherTask(getActivity()).execute(location);
-        Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
-        getActivity().startService(intent);
+        AlarmManager alarmMgr;
+        PendingIntent alarmIntent;
+
+        alarmMgr = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
+        Intent newIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        newIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,getPreferredLocation(getActivity()));
+        alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent);
     }
 
     public void onLocationChanged(){
@@ -184,7 +192,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         if(id == LOADER_ID){
-            String locationSetting = Utility.getPreferredLocation(getActivity());
+            String locationSetting = getPreferredLocation(getActivity());
             // Sort order:  Ascending, by date.
             String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
 

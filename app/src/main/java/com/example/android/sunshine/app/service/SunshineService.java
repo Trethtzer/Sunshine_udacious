@@ -1,13 +1,17 @@
 package com.example.android.sunshine.app.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.android.sunshine.app.FetchWeatherTask;
 import com.example.android.sunshine.app.data.WeatherContract;
@@ -30,6 +34,7 @@ import java.util.Vector;
 
 public class SunshineService extends IntentService {
 
+    private ArrayAdapter<String> mForecastAdapter;
     public static final String LOCATION_QUERY_EXTRA = "location";
     private final String LOG_TAG = "SunshineService";
 
@@ -39,9 +44,6 @@ public class SunshineService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (!intent.hasExtra(LOCATION_QUERY_EXTRA)) {
-            return;
-        }
         String locationQuery = intent.getStringExtra(LOCATION_QUERY_EXTRA);
 
         // These two need to be declared outside the try/catch
@@ -126,7 +128,6 @@ public class SunshineService extends IntentService {
 
         return;
     }
-
     private void getWeatherDataFromJson(String forecastJsonStr,
                                         String locationSetting)
             throws JSONException {
@@ -269,7 +270,6 @@ public class SunshineService extends IntentService {
             e.printStackTrace();
         }
     }
-
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
         // Students: First, check if the location with this city name exists in the db
         // If it exists, return the current ID
@@ -299,5 +299,14 @@ public class SunshineService extends IntentService {
         }
         cursor.close();
         return id;
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent newIntent = new Intent(context, SunshineService.class);
+            newIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,intent.getStringExtra(LOCATION_QUERY_EXTRA));
+            context.startService(newIntent);
+        }
     }
 }

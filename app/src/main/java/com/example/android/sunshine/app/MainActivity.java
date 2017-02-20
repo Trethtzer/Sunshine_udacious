@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.fragments.DetailFragment;
 import com.example.android.sunshine.app.fragments.ForecastFragment;
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements ForecastFragment.mainActivityCallback{
@@ -47,6 +48,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
         ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
     @Override
     protected void onResume() {

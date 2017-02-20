@@ -5,16 +5,9 @@ package com.example.android.sunshine.app.fragments;
  */
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,20 +18,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.android.sunshine.app.DetailActivity;
-import com.example.android.sunshine.app.FetchWeatherTask;
 import com.example.android.sunshine.app.ForecastAdapter;
-import com.example.android.sunshine.app.MainActivity;
 import com.example.android.sunshine.app.R;
-import com.example.android.sunshine.app.Utility;
 import com.example.android.sunshine.app.data.WeatherContract;
-import com.example.android.sunshine.app.service.SunshineService;
 
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
 
 import static com.example.android.sunshine.app.Utility.getPreferredLocation;
+import static com.example.android.sunshine.app.sync.SunshineSyncAdapter.syncImmediately;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -167,6 +156,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     // Funcion para cargar los datos de nuevo.
     public void updateWeather(){
+        syncImmediately(getActivity());
+        /*
         AlarmManager alarmMgr;
         PendingIntent alarmIntent;
 
@@ -175,7 +166,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         newIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,getPreferredLocation(getActivity()));
         alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent); */
     }
 
     public void onLocationChanged(){

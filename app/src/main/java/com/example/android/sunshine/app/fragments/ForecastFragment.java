@@ -93,17 +93,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                /*Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                            ));
-                    startActivity(intent);
-                }*/
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if(cursor != null){
                     String locationSetting = getPreferredLocation(getActivity());
@@ -157,16 +146,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     // Funcion para cargar los datos de nuevo.
     public void updateWeather(){
         syncImmediately(getActivity());
-        /*
-        AlarmManager alarmMgr;
-        PendingIntent alarmIntent;
-
-        alarmMgr = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
-        Intent newIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        newIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,getPreferredLocation(getActivity()));
-        alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
-
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, alarmIntent); */
     }
 
     public void onLocationChanged(){
